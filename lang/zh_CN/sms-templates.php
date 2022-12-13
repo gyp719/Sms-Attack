@@ -13,6 +13,7 @@ return [
         'status'         => '状态',
         'source'         => '来源',
         'source_url'     => '来源地址',
+        'source_image'   => '来源图片',
     ],
     'options' => [
     ],

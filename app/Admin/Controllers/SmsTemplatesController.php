@@ -13,6 +13,7 @@ class SmsTemplatesController extends AdminController
     protected function grid(): Grid
     {
         return Grid::make(new SmsTemplate(), function (Grid $grid) {
+            $grid->model()->orderBy('id', 'DESC');
             $grid->column('id')->sortable();
             $grid->column('sign_name')->label('#444');
             $grid->column('method')->display(function ($value) {
@@ -28,7 +29,10 @@ class SmsTemplatesController extends AdminController
                 SmsTemplate::REQUEST_OPTION_FORM_PARAMS => 'success',
                 SmsTemplate::REQUEST_OPTION_JSON        => 'info',
             ]);
-            $grid->column('options')->copyable();
+            $grid->column('options')->display(function ($value) {
+                //  转化为json 字符串
+                return $value ? json_encode($value) : '';
+            })->copyable();
             $grid->column('status')->select(SmsTemplate::$statusMap);
             $grid->column('source')->display(function ($value) {
                 return SmsTemplate::$sourceMap[$value];
@@ -62,7 +66,10 @@ class SmsTemplatesController extends AdminController
             $show->field('url');
             $show->field('method');
             $show->field('request_option');
-            $show->field('options');
+            $show->field('options')->as(function ($value) {
+                //  转化为json 字符串
+                return $value ? json_encode($value) : '';
+            });
             $show->field('status');
             $show->field('source');
             $show->field('source_url');
@@ -78,11 +85,15 @@ class SmsTemplatesController extends AdminController
             $form->text('sign_name')->required();
             $form->url('url')->required();
             $form->radio('method')->options(SmsTemplate::$methodMap)->default(SmsTemplate::METHOD_POST)->required();
-            $form->text('request_option')->required();
-            $form->keyValue('options')->required();
-            $form->select('status')->options(SmsTemplate::$statusMap)->default(SmsTemplate::STATUS_ON)->required();
-            $form->radio('source')->options(SmsTemplate::$sourceMap)->default(SmsTemplate::SOURCE_WEB)->required();
-            $form->text('source_url');
+            $form->radio('request_option')->options(SmsTemplate::$requestOptionMap)->default(SmsTemplate::REQUEST_OPTION_MULTIPART)->required();
+            $form->keyValue('options')->default(['' => 'phone'])->required();
+            $form->radio('status')->options(SmsTemplate::$statusMap)->default(SmsTemplate::STATUS_ON)->required();
+            $form->radio('source')->options(SmsTemplate::$sourceMap)
+                ->when([SmsTemplate::SOURCE_WEB, SmsTemplate::SOURCE_H5], function (Form $form) {
+                    $form->url('source_url');
+                })->when(SmsTemplate::SOURCE_MINI_PROGRAM, function (Form $form) {
+                    $form->image('source_image')->chunkSize(500)->autoUpload();;
+                });
 
             $form->display('created_at');
             $form->display('updated_at');

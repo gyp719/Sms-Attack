@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('options')->comment('请求参数');
             $table->smallInteger('status')->default(0)->comment('状态 0-关闭 1-开始 2-废弃');
             $table->string('source')->comment('来源');
-            $table->string('source_url')->comment('来源地址');
+            $table->string('source_url')->default('')->comment('来源地址');
+            $table->string('source_image')->default('')->comment('来源图片');
 
             $table->timestamps();
         });

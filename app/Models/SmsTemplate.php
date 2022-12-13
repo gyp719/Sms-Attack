@@ -11,7 +11,7 @@ class SmsTemplate extends Model
     use HasFactory, SerializeDate;
 
     protected $casts = [
-//        'options' => 'json',
+        'options' => 'json',
     ];
 
     // 请求方式
