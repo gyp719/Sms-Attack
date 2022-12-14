@@ -13,6 +13,6 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
-    $router->resource('sms_templates', 'SmsTemplatesController'); // 短信模版
+    $router->resource('sms_templates', 'SmsTemplatesController', ['except' => ['show'] ]); // 短信模版
     $router->resource('users', 'UsersController'); // 用户列表
 });

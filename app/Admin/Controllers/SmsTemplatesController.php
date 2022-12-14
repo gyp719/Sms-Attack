@@ -5,7 +5,6 @@ namespace App\Admin\Controllers;
 use App\Models\SmsTemplate;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 
 class SmsTemplatesController extends AdminController
@@ -55,26 +54,6 @@ class SmsTemplatesController extends AdminController
                 $filter->equal('status')->radio(SmsTemplate::$statusMap);
                 $filter->equal('source')->select(SmsTemplate::$sourceMap);
             });
-        });
-    }
-
-    protected function detail($id): Show
-    {
-        return Show::make($id, new SmsTemplate(), function (Show $show) {
-            $show->field('id');
-            $show->field('sign_name');
-            $show->field('url');
-            $show->field('method');
-            $show->field('request_option');
-            $show->field('options')->as(function ($value) {
-                //  转化为json 字符串
-                return $value ? json_encode($value) : '';
-            });
-            $show->field('status');
-            $show->field('source');
-            $show->field('source_url');
-            $show->field('created_at');
-            $show->field('updated_at');
         });
     }
 
