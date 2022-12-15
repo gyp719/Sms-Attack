@@ -11,10 +11,8 @@ class AttackUserFactory extends Factory
     #[ArrayShape(['phone' => "string"])]
     public function definition(): array
     {
-        $faker = Faker::create('zh_CN');
-
         return [
-            'phone' => $faker->phoneNumber(),
+            'phone' => fake()->phoneNumber(),
         ];
     }
 }
