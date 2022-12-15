@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\SmsTemplateAttack;
 use App\Models\SmsTemplate;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -54,6 +55,8 @@ class SmsTemplatesController extends AdminController
                 $filter->equal('status')->radio(SmsTemplate::$statusMap);
                 $filter->equal('source')->select(SmsTemplate::$sourceMap);
             });
+
+            $grid->tools(new SmsTemplateAttack());
         });
     }
 

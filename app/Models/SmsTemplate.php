@@ -56,5 +56,13 @@ class SmsTemplate extends Model
         self::SOURCE_MINI_PROGRAM => '小程序',
     ];
 
+    // 攻击类型
+    const ATTACK_TYPE_ATTACK  = 'attack';
+    const ATTACK_TYPE_CONSUME = 'consume';
+
+    public static array $attackMap = [
+        self::ATTACK_TYPE_ATTACK  => '攻击',
+        self::ATTACK_TYPE_CONSUME => '消耗',
+    ];
 
 }
