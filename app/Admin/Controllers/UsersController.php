@@ -5,7 +5,6 @@ namespace App\Admin\Controllers;
 use App\Models\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 
 class UsersController extends AdminController
@@ -25,26 +24,13 @@ class UsersController extends AdminController
         });
     }
 
-    protected function detail($id): Show
-    {
-        return Show::make($id, new User(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('phone');
-            $show->field('identity');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
-    }
-
     protected function form(): Form
     {
         return Form::make(new User(), function (Form $form) {
             $form->display('id');
-            $form->text('name')->required();
+            $form->text('name');
             $form->mobile('phone')->required();
-            $form->text('identity')->required();
-
+            $form->text('identity')->prepend('<i class="fa fa-id-card-o"></i>');
             $form->display('created_at');
             $form->display('updated_at');
         });
