@@ -18,6 +18,11 @@ class SmsHandler
         $request_params = array(
             $smsTemplate['request_option'] => $options
         );
+        // 存在 headers，追加参数
+        if ($smsTemplate['headers']) {
+            $request_params['headers'] = $smsTemplate['headers'];
+        }
+        
         // HTTP 客户端请求
         $response = Http::send($smsTemplate['method'], $smsTemplate['url'], $request_params);
 

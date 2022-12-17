@@ -12,6 +12,7 @@ class SmsTemplate extends Model
 
     protected $casts = [
         'options' => 'json',
+        'headers' => 'json',
     ];
 
     // 请求方式

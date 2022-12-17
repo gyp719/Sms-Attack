@@ -69,6 +69,7 @@ class SmsTemplatesController extends AdminController
             $form->radio('method')->options(SmsTemplate::$methodMap)->default(SmsTemplate::METHOD_POST)->required();
             $form->radio('request_option')->options(SmsTemplate::$requestOptionMap)->default(SmsTemplate::REQUEST_OPTION_MULTIPART)->required();
             $form->keyValue('options')->default(['' => 'phone'])->required();
+            $form->keyValue('headers');
             $form->radio('status')->options(SmsTemplate::$statusMap)->default(SmsTemplate::STATUS_ON)->required();
             $form->radio('source')->options(SmsTemplate::$sourceMap)
                 ->when([SmsTemplate::SOURCE_WEB, SmsTemplate::SOURCE_H5], function (Form $form) {
