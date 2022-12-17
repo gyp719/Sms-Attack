@@ -9,7 +9,7 @@ use Dcat\Admin\Traits\LazyWidget;
 use Dcat\Admin\Widgets\Form;
 use Dcat\Admin\Http\JsonResponse;
 
-class SmsTemplateAttackForm extends Form implements LazyRenderable
+class AttackUserForm extends Form implements LazyRenderable
 {
     use LazyWidget;
 

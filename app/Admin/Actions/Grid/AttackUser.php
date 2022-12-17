@@ -2,18 +2,18 @@
 
 namespace App\Admin\Actions\Grid;
 
-use App\Admin\Forms\SmsTemplateAttackForm;
+use App\Admin\Forms\AttackUserForm;
 use Dcat\Admin\Grid\BatchAction;
 use Dcat\Admin\Widgets\Modal;
 
-class SmsTemplateAttack extends BatchAction
+class AttackUser extends BatchAction
 {
     protected $title = '攻击';
 
     public function render(): string|Modal
     {
         // 实例化表单类
-        $form = SmsTemplateAttackForm::make();
+        $form = AttackUserForm::make();
 
         return Modal::make()
             ->lg()

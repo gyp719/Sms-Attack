@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Grid\SmsTemplateAttack;
+use App\Admin\Actions\Grid\AttackUser;
 use App\Models\SmsTemplate;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -56,7 +56,7 @@ class SmsTemplatesController extends AdminController
                 $filter->equal('source')->select(SmsTemplate::$sourceMap);
             });
 
-            $grid->tools(new SmsTemplateAttack());
+            $grid->tools(new AttackUser());
         });
     }
 
