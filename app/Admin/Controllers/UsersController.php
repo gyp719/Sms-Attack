@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\AttackSmsTemplate;
 use App\Models\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -21,6 +22,7 @@ class UsersController extends AdminController
             // 快捷搜索
             $grid->quickSearch('id', 'name', 'phone', 'updated_at')->placeholder('搜索ID、姓名、手机号、身份证号码');;
 
+            $grid->tools(new AttackSmsTemplate());
         });
     }
 

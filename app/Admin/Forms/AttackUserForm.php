@@ -38,7 +38,6 @@ class AttackUserForm extends Form implements LazyRenderable
         }
 
 
-
         //写你的处理逻辑
         foreach ($id as $key => $value) {
 
@@ -53,13 +52,14 @@ class AttackUserForm extends Form implements LazyRenderable
     public function form()
     {
         $this->radio('attack_type', '攻击类型')
+            ->options(SmsTemplate::$attackTypeMap)
             ->when(SmsTemplate::ATTACK_TYPE_ATTACK, function (Form $form) {
                 $form->multipleSelect('attack_phone', '攻击用户')->options(User::query()->pluck('phone', 'id'));
             })
             ->when(SmsTemplate::ATTACK_TYPE_CONSUME, function (Form $form) {
 
             })
-            ->options(SmsTemplate::$attackMap)->required();
+            ->required();
         // 设置隐藏表单，传递用户id
         $this->hidden('id')->attribute('id', 'sms-template-id');
     }

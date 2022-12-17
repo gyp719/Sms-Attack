@@ -60,9 +60,19 @@ class SmsTemplate extends Model
     const ATTACK_TYPE_ATTACK  = 'attack';
     const ATTACK_TYPE_CONSUME = 'consume';
 
-    public static array $attackMap = [
+    public static array $attackTypeMap = [
         self::ATTACK_TYPE_ATTACK  => '攻击',
         self::ATTACK_TYPE_CONSUME => '消耗',
     ];
+
+    // 攻击方式
+    const ATTACK_WAY_ALL    = 'all';
+    const ATTACK_WAY_ASSIGN = 'assign';
+
+    public static array $attackWayMap = [
+        self::ATTACK_WAY_ALL    => '所有',
+        self::ATTACK_WAY_ASSIGN => '指定',
+    ];
+
 
 }
