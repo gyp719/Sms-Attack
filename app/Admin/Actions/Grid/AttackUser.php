@@ -30,7 +30,7 @@ class AttackUser extends BatchAction
 // 获取选中的ID数组
 var key = {$this->getSelectedKeysScript()}
 // 与 弹窗隐藏的绑定的id一致
-$('#sms-template-id').val(key);
+$('#attack-user-id').val(key);
 JS;
     }
 }

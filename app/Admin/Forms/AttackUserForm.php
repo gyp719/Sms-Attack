@@ -16,12 +16,16 @@ class AttackUserForm extends Form implements LazyRenderable
     public function handle(array $input): JsonResponse
     {
         // 处理提交过来的批量选择的行的id
-        $id = explode(',', $input['id'] ?? null);
-        if (!$id) {
-            return $this->response()->error('参数错误');
+        $ids = explode(',', $input['id'] ?? null);
+        if (!head($ids)) {
+            return $this->response()->error('请至少选择一个短信模版')->refresh();
         }
 
-        logger($id);
+
+
+
+
+
         return $this->response()->success('提交成功')->refresh();
         $smsTemplates = SmsTemplate::query()->whereIn('id', $id)->get();
 
@@ -60,7 +64,7 @@ class AttackUserForm extends Form implements LazyRenderable
 
             })
             ->required();
-        // 设置隐藏表单，传递用户id
-        $this->hidden('id')->attribute('id', 'sms-template-id');
+        // 设置隐藏表单，传递短信模版id
+        $this->hidden('id')->attribute('id', 'attack-user-id');
     }
 }
