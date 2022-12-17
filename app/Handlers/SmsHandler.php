@@ -2,12 +2,14 @@
 
 namespace App\Handlers;
 
+use App\Models\SmsLog;
 use App\Models\SmsTemplate;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Response;
 
 class SmsHandler
 {
-    public function send(SmsTemplate $smsTemplate, $phone)
+    public function send(SmsTemplate $smsTemplate, $phone): Response
     {
         $options = [];
         // 搜是否包含 phone 键值，并返回对应的键名。
@@ -22,12 +24,27 @@ class SmsHandler
         if ($smsTemplate['headers']) {
             $request_params['headers'] = $smsTemplate['headers'];
         }
-        
+
         // HTTP 客户端请求
         $response = Http::send($smsTemplate['method'], $smsTemplate['url'], $request_params);
 
+        if ($response->successful()) {
+            $smsLog = new SmsLog([
+                'phone'       => $phone,
+                'description' => $response['message'],
+            ]);
+            $smsLog->smsTemplate()->associate($smsTemplate);
+            // 0 成功
+            if (in_array($response['code'], [0, 200])) {
+                $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
+            } else {
+                $smsLog['send_status'] = SmsLog::SEND_STATUS_FAIL;
+            }
+            $smsLog->save();
+        } else {
+            logger($response);
+        }
 
-        logger($response);
         return $response;
     }
 
