@@ -2,12 +2,12 @@
 
 导出后台数据表
 ```
-php artisan iseed admin_users,admin_roles,admin_permissions,admin_menu,admin_role_users,admin_role_permissions,admin_role_menu,admin_permission_menu,admin_settings,admin_extensions,admin_extension_histories
+php artisan iseed admin_users,admin_roles,admin_permissions,admin_menu,admin_role_users,admin_role_permissions,admin_role_menu,admin_permission_menu,admin_settings,admin_extensions,admin_extension_histories --force
 ```
 
 导出短信模版
 ```
-php artisan iseed sms_templates
+php artisan iseed sms_templates --force
 ```
 
 生成攻击用户
