@@ -85,8 +85,8 @@ class SmsTemplatesController extends AdminController
             $form->saved(function (Form $form, $result) {
                 // 在表单保存后获取eloquent
                 $headers = $form->input('headers');
-                if ((!array_key_exists('keys', $headers) || (!array_key_exists('values', $headers)))) {
-                    $form->model()->update(['headers' => null]);
+                if ($headers && (!array_key_exists('keys', $headers) || (!array_key_exists('values', $headers)))) {
+                    $form->model()->update(['headers' => '']);
                 }
 
             });
