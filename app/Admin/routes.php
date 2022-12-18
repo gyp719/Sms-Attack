@@ -15,4 +15,5 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('sms_templates', 'SmsTemplatesController', ['except' => ['show'] ]); // 短信模版
     $router->resource('users', 'UsersController', ['except' => ['show'] ]); // 用户列表
+    $router->resource('sms_logs', 'SmsLogsController', ['only' => ['index', 'destroy'] ]); // 短信日志
 });

@@ -25,6 +25,7 @@ class SmsTemplatesController extends AdminController
             $grid->column('request_option')->display(function ($value) {
                 return SmsTemplate::$requestOptionMap[$value];
             })->badge([
+                SmsTemplate::REQUEST_OPTION_QUERY       => 'pink',
                 SmsTemplate::REQUEST_OPTION_MULTIPART   => 'primary',
                 SmsTemplate::REQUEST_OPTION_FORM_PARAMS => 'success',
                 SmsTemplate::REQUEST_OPTION_JSON        => 'info',
