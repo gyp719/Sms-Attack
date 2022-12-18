@@ -15,6 +15,19 @@ class SmsTemplate extends Model
         'headers' => 'json',
     ];
 
+    protected $fillable = [
+        'sign_name',
+        'url',
+        'method',
+        'request_option',
+        'options',
+        'headers',
+        'status',
+        'source',
+        'source_url',
+        'source_image',
+    ];
+
     // 请求方式
     const METHOD_GET  = 'GET';
     const METHOD_POST = 'POST';

@@ -77,10 +77,19 @@ class SmsTemplatesController extends AdminController
                     $form->url('source_url');
                 })->when(SmsTemplate::SOURCE_MINI_PROGRAM, function (Form $form) {
                     $form->image('source_image')->chunkSize(500)->autoUpload();;
-                });
+                })->required();
 
             $form->display('created_at');
             $form->display('updated_at');
+
+            $form->saved(function (Form $form, $result) {
+                // 在表单保存后获取eloquent
+                $headers = $form->input('headers');
+                if ((!array_key_exists('keys', $headers) || (!array_key_exists('values', $headers)))) {
+                    $form->model()->update(['headers' => null]);
+                }
+
+            });
         });
     }
 }

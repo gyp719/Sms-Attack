@@ -17,9 +17,9 @@ return new class extends Migration
             $table->comment('用户表');
 
             $table->id();
-            $table->string('name')->default('')->comment('姓名');
+            $table->string('name')->nullable()->comment('姓名');
             $table->string('phone')->unique()->comment('手机号');
-            $table->string('identity')->default('')->unique()->comment('身份证号码');
+            $table->string('identity')->nullable()->unique()->comment('身份证号码');
 
             $table->timestamps();
         });
