@@ -36,11 +36,13 @@ class SmsTemplate extends Model
     ];
 
     // 请求选项
+    const REQUEST_OPTION_QUERY       = 'query';
     const REQUEST_OPTION_MULTIPART   = 'multipart';
     const REQUEST_OPTION_FORM_PARAMS = 'form_params';
     const REQUEST_OPTION_JSON        = 'json';
 
     public static array $requestOptionMap = [
+        self::REQUEST_OPTION_QUERY       => 'query',
         self::REQUEST_OPTION_MULTIPART   => 'multipart/form-data',
         self::REQUEST_OPTION_FORM_PARAMS => 'application/x-www-form-urlencoded',
         self::REQUEST_OPTION_JSON        => 'application/json',

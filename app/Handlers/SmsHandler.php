@@ -29,9 +29,18 @@ class SmsHandler
         $response = Http::send($smsTemplate['method'], $smsTemplate['url'], $request_params);
 
         if ($response->successful()) {
+            // 定义返回信息的键
+            $messageKeys = ['message', 'msg'];
+
+            foreach ($messageKeys as $messageKey) {
+                if (array_key_exists($messageKey, $response->json())) {
+                    break;
+                }
+            }
+
             $smsLog = new SmsLog([
                 'phone'       => $phone,
-                'description' => $response['message'],
+                'description' => $response[$messageKey],
             ]);
             $smsLog->smsTemplate()->associate($smsTemplate);
             // 0 成功
