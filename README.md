@@ -14,3 +14,8 @@ php artisan iseed sms_templates --force
 ```
 php artisan db:seed --class=AttackUserTableSeeder
 ```
+
+Horizon 队列管理工具
+```
+php artisan horizon
+```
