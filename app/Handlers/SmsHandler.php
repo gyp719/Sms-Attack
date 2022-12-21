@@ -9,13 +9,22 @@ use Illuminate\Http\Client\Response;
 
 class SmsHandler
 {
-    public function send(SmsTemplate $smsTemplate, $phone): Response
+    public function send(SmsTemplate $smsTemplate, $phone)/*: Response*/
     {
         $options = [];
-        // 搜是否包含 phone 键值，并返回对应的键名。
-        if (($key = array_search('phone', $smsTemplate['options'])) !== false) {
-            $options[$key] = $phone;
+
+        // 是否包含 phone 键, 存在替换为手机号
+        foreach ($smsTemplate['options'] as $key => $value) {
+            if ($smsTemplate['request_option'] == SmsTemplate::REQUEST_OPTION_MULTIPART) {
+                $options[] = [
+                    'name' => $key,
+                    'contents' => $value == 'phone' ? $phone : $value,
+                ];
+            } else {
+                $options[$key] =  $value == 'phone' ? $phone : $value;
+            }
         }
+
         // 组装好请求参数
         $request_params = array(
             $smsTemplate['request_option'] => $options
@@ -28,9 +37,14 @@ class SmsHandler
         // HTTP 客户端请求
         $response = Http::send($smsTemplate['method'], $smsTemplate['url'], $request_params);
 
-        if ($response->successful()) {
+        if ($response->successful() ||
+            isset($response['status']) ||
+            isset($response['success']) ||
+            isset($response['type']) ||
+            isset($response['message'])
+        ) {
             // 定义返回信息的键
-            $messageKeys = ['message', 'msg'];
+            $messageKeys = ['message', 'msg', 'info', 'errorMsg', 'operating', 'type', 'status', 'data'];
 
             foreach ($messageKeys as $messageKey) {
                 if (array_key_exists($messageKey, $response->json())) {
@@ -40,11 +54,15 @@ class SmsHandler
 
             $smsLog = new SmsLog([
                 'phone'       => $phone,
-                'description' => $response[$messageKey],
+                'description' => $response[$messageKey] ?: '',
             ]);
             $smsLog->smsTemplate()->associate($smsTemplate);
-            // 0 成功
-            if (in_array($response['code'], [0, 200])) {
+
+            if (
+                (isset($response['code']) && in_array($response['code'], [0, 200])) ||
+                (isset($response['status']) &&  in_array($response['status'], [0, 200])) ||
+                (isset($response['success']) && $response['success'] == true)
+            ) {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
             } else {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_FAIL;

@@ -49,6 +49,8 @@ class SmsTemplate extends Model
     ];
 
     // 请求选项
+    // form-data 对应请求头 multipart/form-data
+    // x-www-form-urlencoded 对应请求头 application/x-www-form-urlencoded
     const REQUEST_OPTION_QUERY       = 'query';
     const REQUEST_OPTION_MULTIPART   = 'multipart';
     const REQUEST_OPTION_FORM_PARAMS = 'form_params';
