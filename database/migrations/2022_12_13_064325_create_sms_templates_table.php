@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->id();
             $table->string('sign_name')->comment('签名名称');
-            $table->string('url')->comment('请求地址');
+            $table->string('url')->unique()->comment('请求地址');
             $table->string('method')->comment('请求方法');
             $table->string('request_option')->comment('请求选项');
             $table->string('options')->comment('请求参数');
