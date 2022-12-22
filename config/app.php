@@ -30,6 +30,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'mapping_phone' => env('MAPPING_PHONE', '{phone}'),
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

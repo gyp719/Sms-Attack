@@ -13,6 +13,10 @@ class SmsLog extends Model
 
     protected $fillable = ['phone', 'description', 'send_status'];
 
+    protected $casts = [
+        'description' => 'json',
+    ];
+
     // 发送状态
     const SEND_STATUS_SUCCESS = 'success';
     const SEND_STATUS_FAIL    = 'fail';

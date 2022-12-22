@@ -9,7 +9,7 @@ use Illuminate\Http\Client\Response;
 
 class SmsHandler
 {
-    public function send(SmsTemplate $smsTemplate, $phone)/*: Response*/
+    public function send(SmsTemplate $smsTemplate, $phone): Response
     {
         $options = [];
 
@@ -17,11 +17,11 @@ class SmsHandler
         foreach ($smsTemplate['options'] as $key => $value) {
             if ($smsTemplate['request_option'] == SmsTemplate::REQUEST_OPTION_MULTIPART) {
                 $options[] = [
-                    'name' => $key,
-                    'contents' => $value == 'phone' ? $phone : $value,
+                    'name'     => $key,
+                    'contents' => $value == config('app.mapping_phone') ? "{$phone}" : $value,
                 ];
             } else {
-                $options[$key] =  $value == 'phone' ? $phone : $value;
+                $options[$key] = $value == config('app.mapping_phone') ? "{$phone}" : $value;
             }
         }
 
@@ -33,35 +33,33 @@ class SmsHandler
         if ($smsTemplate['headers']) {
             $request_params['headers'] = $smsTemplate['headers'];
         }
-
         // HTTP 客户端请求
-        $response = Http::send($smsTemplate['method'], $smsTemplate['url'], $request_params);
+        $response = Http::send($smsTemplate['method'], str_replace(config('app.mapping_phone'), $phone, $smsTemplate['url']), $request_params);
 
-        if ($response->successful() ||
-            isset($response['status']) ||
-            isset($response['success']) ||
-            isset($response['type']) ||
-            isset($response['message'])
-        ) {
-            // 定义返回信息的键
-            $messageKeys = ['message', 'msg', 'info', 'errorMsg', 'operating', 'type', 'status', 'data'];
-
-            foreach ($messageKeys as $messageKey) {
-                if (array_key_exists($messageKey, $response->json())) {
-                    break;
-                }
-            }
-
+        if ($response->successful() || $response->json()) {
             $smsLog = new SmsLog([
                 'phone'       => $phone,
-                'description' => $response[$messageKey] ?: '',
+                'description' => $response->json() ?: $response->body(),
             ]);
             $smsLog->smsTemplate()->associate($smsTemplate);
 
             if (
-                (isset($response['code']) && in_array($response['code'], [0, 200])) ||
-                (isset($response['status']) &&  in_array($response['status'], [0, 200])) ||
-                (isset($response['success']) && $response['success'] == true)
+                isset($response['code']) && in_array($response['code'], [0, 1, 200, 10000]) ||
+                isset($response['d']) && $response['d'] == 'suc' ||
+                isset($response['status_code']) && in_array($response['status_code'], [200, 201]) ||
+                isset($response['success']) && $response['success'] == 1 ||
+                isset($response['ticket']) ||
+                isset($response['errcode']) && $response['errcode'] == 0 ||
+                isset($response['err']) && $response['err'] == 0 ||
+                isset($response['businessCode']) && $response['businessCode'] == 1000 ||
+                isset($response['result']) && $response['result']['resultCode'] == 200 ||
+                is_numeric($response->json()) ||
+                isset($response['responseCode']) && $response['responseCode'] == 0 ||
+                isset($response['status']) && in_array($response['status'], [0, 200]) ||
+                isset($response['type']) && $response['type'] == 'verifycode.send' ||
+                isset($response['state']) && $response['state'] == 'success' ||
+                isset($response['ret']) && $response['ret'] == 1 ||
+                isset($response['stat']) && $response['stat'] == 1
             ) {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
             } else {
@@ -69,7 +67,7 @@ class SmsHandler
             }
             $smsLog->save();
         } else {
-            logger($response);
+            logger("'短信模版签名:{$smsTemplate['sign_name']}, 错误信息：{$response}");
         }
 
         return $response;

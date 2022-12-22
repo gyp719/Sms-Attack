@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sms_template_id')->comment('短信模版ID');
             $table->string('phone')->comment('手机号');
-            $table->string('description')->comment('说明');
+            $table->text('description')->comment('说明');
             $table->string('send_status')->default(SmsLog::SEND_STATUS_SUCCESS)->comment('发送状态');
             $table->timestamps();
         });

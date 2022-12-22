@@ -66,10 +66,10 @@ class SmsTemplatesController extends AdminController
         return Form::make(new SmsTemplate(), function (Form $form) {
             $form->display('id');
             $form->text('sign_name')->required();
-            $form->url('url')->required();
+            $form->text('url')->prepend('<i class="fa fa-internet-explorer fa-fw"></i>')->required();
             $form->radio('method')->options(SmsTemplate::$methodMap)->default(SmsTemplate::METHOD_POST)->required();
             $form->radio('request_option')->options(SmsTemplate::$requestOptionMap)->default(SmsTemplate::REQUEST_OPTION_MULTIPART)->required();
-            $form->keyValue('options')->default(['' => 'phone'])->required();
+            $form->keyValue('options')->default(['' => config('app.mapping_phone')])->required();
             $form->keyValue('headers');
             $form->radio('status')->options(SmsTemplate::$statusMap)->default(SmsTemplate::STATUS_ON)->required();
             $form->radio('source')->options(SmsTemplate::$sourceMap)
@@ -77,7 +77,7 @@ class SmsTemplatesController extends AdminController
                     $form->url('source_url');
                 })->when(SmsTemplate::SOURCE_MINI_PROGRAM, function (Form $form) {
                     $form->image('source_image')->chunkSize(500)->autoUpload();;
-                })->required();
+                })->default(SmsTemplate::SOURCE_WEB)->required();
 
             $form->display('created_at');
             $form->display('updated_at');
