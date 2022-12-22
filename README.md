@@ -27,6 +27,11 @@ php artisan iseed admin_users,admin_roles,admin_permissions,admin_menu,admin_rol
 php artisan iseed sms_templates --force
 ```
 
+导出用户
+```
+php artisan iseed users --force
+```
+
 生成攻击用户
 ```
 php artisan db:seed --class=AttackUserTableSeeder
