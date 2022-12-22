@@ -44,7 +44,7 @@ class SmsHandler
             $smsLog->smsTemplate()->associate($smsTemplate);
 
             if (
-                isset($response['code']) && in_array($response['code'], [0, 1, 200, 10000]) ||
+                isset($response['code']) && in_array($response['code'], [0, 1, 200, 10000, 20000]) ||
                 isset($response['d']) && $response['d'] == 'suc' ||
                 isset($response['status_code']) && in_array($response['status_code'], [200, 201]) ||
                 isset($response['success']) && $response['success'] == 1 ||
