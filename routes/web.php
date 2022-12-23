@@ -16,11 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $smsTemplate = \App\Models\SmsTemplate::query()->where('id', 5)->first();
-
-    $smsHandler = new SmsHandler();
-
-    return $smsHandler->send($smsTemplate, 15172441211);
-
     return view('welcome');
 });
