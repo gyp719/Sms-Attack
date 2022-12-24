@@ -12,6 +12,7 @@
         "laravel/horizon": "^5.10",
         "laravel/tinker": "^2.7",
         "orangehill/iseed": "^3.0",
+        "overtrue/laravel-lang": "~6.0",
         "predis/predis": "^2.0"
     },
     "require-dev": {
