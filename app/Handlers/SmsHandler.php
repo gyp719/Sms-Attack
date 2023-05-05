@@ -35,7 +35,7 @@ class SmsHandler
             $request_params['headers'] = $smsTemplate['headers'];
         }
         // HTTP 客户端请求
-        $response = Http::send($smsTemplate['method'], str_replace(config('app.mapping_phone'), $phone, $smsTemplate['url']), $request_params);
+        $response = Http::withOptions(['verify' => false])->send($smsTemplate['method'], str_replace(config('app.mapping_phone'), $phone, $smsTemplate['url']), $request_params);
 
         if ($response->successful() || $response->json()) {
             $smsLog = new SmsLog([
@@ -46,7 +46,7 @@ class SmsHandler
             // 短信模版的成功响应
             $success_response_array = json_decode($smsTemplate['success_response'], true);
             // 判断 JSON 数据具有相同的结构
-            if (blank(array_diff_key($response->json(), $success_response_array))) {
+            if (is_numeric($response->json()) || blank(array_diff_key($response->json(), $success_response_array))) {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
             } else {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_FAIL;
