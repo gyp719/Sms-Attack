@@ -46,7 +46,42 @@ class SmsHandler
             // 短信模版的成功响应
             $success_response_array = json_decode($smsTemplate['success_response'], true);
             // 判断 JSON 数据具有相同的结构
-            if (is_numeric($response->json()) || blank(array_diff_key($response->json(), $success_response_array))) {
+            if (is_numeric($response->json()) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['status']) && $response['status'] == $success_response_array['status']) ||
+                (isset($response['d']) && $response['d'] == $success_response_array['d']) ||
+                (isset($response['status_code']) && $response['status_code'] == $success_response_array['status_code'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['errcode']) && $response['errcode'] == $success_response_array['errcode'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['err']) && $response['err'] == $success_response_array['err'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
+                (isset($response['businessCode']) && $response['businessCode'] == $success_response_array['businessCode'] && isset($response['content']) && $response['content'] == $success_response_array['content']) ||
+                (isset($response['ticket']) && strlen($response['ticket']) >= 30) ||
+                (isset($response['isSuccess']) && $response['isSuccess'] == $success_response_array['isSuccess'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['result']) && $response['result'] == $success_response_array['result']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['error']) && $response['error'] == $success_response_array['error']) ||
+                (isset($response['resultcode']) && $response['resultcode'] == $success_response_array['resultcode'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['slResponseCode']) && $response['slResponseCode'] == $success_response_array['slResponseCode'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['data']) && $response['data'] == $success_response_array['data']) ||
+                (isset($response['status']) && $response['status'] == $success_response_array['status'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['status']) && $response['status'] == $success_response_array['status']) ||
+                (isset($response['operating']) && $response['operating'] == $success_response_array['operating'] && isset($response['type']) && $response['type'] == $success_response_array['type']) ||
+                (isset($response['state']) && $response['state'] == $success_response_array['state'] && isset($response['success']) && $response['success'] == $success_response_array['success']) ||
+                (isset($response['success']) && $response['success'] == $success_response_array['success'] && isset($response['request_id']) && is_numeric($response['request_id'])) ||
+                (isset($response['ret']) && $response['ret'] == $success_response_array['ret'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
+                (isset($response['success']) && $response['success'] == $success_response_array['success'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code'] && isset($response['desc']) && $response['desc'] == $success_response_array['desc']) ||
+                (isset($response['stat']) && $response['stat'] == $success_response_array['stat'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
+                (isset($response['errcode']) && $response['errcode'] == $success_response_array['errcode'] && isset($response['errmsg']) && $response['errmsg'] == $success_response_array['errmsg']) ||
+                (isset($response['code']) && $response['code'] == $success_response_array['code']) ||
+                (isset($response['ok']) && $response['ok'] == $success_response_array['ok']) ||
+
+                (isset($response['success']) && $response['success'] == $success_response_array['success'] && is_null($success_response_array['errorCode']))
+
+
+
+//                blank(array_diff_key($response->json(), $success_response_array))
+
+            ) {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
             } else {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_FAIL;
