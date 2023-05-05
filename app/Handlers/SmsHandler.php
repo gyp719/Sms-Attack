@@ -6,10 +6,11 @@ use App\Models\SmsLog;
 use App\Models\SmsTemplate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Log;
 
 class SmsHandler
 {
-    public function send(SmsTemplate $smsTemplate, $phone): Response
+    public function send(SmsTemplate $smsTemplate, $phone)/*: Response*/
     {
         $options = [];
 
@@ -42,32 +43,17 @@ class SmsHandler
                 'description' => $response->json() ?: $response->body(),
             ]);
             $smsLog->smsTemplate()->associate($smsTemplate);
-
-            if (
-                isset($response['code']) && in_array($response['code'], [0, 1, 200, 10000, 20000]) ||
-                isset($response['d']) && $response['d'] == 'suc' ||
-                isset($response['status_code']) && in_array($response['status_code'], [200, 201]) ||
-                isset($response['success']) && $response['success'] == 1 ||
-                isset($response['ticket']) ||
-                isset($response['errcode']) && $response['errcode'] == 0 ||
-                isset($response['err']) && $response['err'] == 0 ||
-                isset($response['businessCode']) && $response['businessCode'] == 1000 ||
-                isset($response['result']) && $response['result']['resultCode'] == 200 ||
-                is_numeric($response->json()) ||
-                isset($response['responseCode']) && $response['responseCode'] == 0 ||
-                isset($response['status']) && in_array($response['status'], [0, 200]) ||
-                isset($response['type']) && $response['type'] == 'verifycode.send' ||
-                isset($response['state']) && $response['state'] == 'success' ||
-                isset($response['ret']) && $response['ret'] == 1 ||
-                isset($response['stat']) && $response['stat'] == 1
-            ) {
+            // 短信模版的成功响应
+            $success_response_array = json_decode($smsTemplate['success_response'], true);
+            // 判断 JSON 数据具有相同的结构
+            if (blank(array_diff_key($response->json(), $success_response_array))) {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_SUCCESS;
             } else {
                 $smsLog['send_status'] = SmsLog::SEND_STATUS_FAIL;
             }
             $smsLog->save();
         } else {
-            logger("'短信模版签名:{$smsTemplate['sign_name']}, 错误信息：{$response}");
+            Log::info("'短信模版签名:{$smsTemplate['sign_name']}, 错误信息：{$response}");
         }
 
         return $response;

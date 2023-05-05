@@ -11,8 +11,9 @@ class SmsTemplate extends Model
     use HasFactory, SerializeDate;
 
     protected $casts = [
-        'options' => 'json',
-        'headers' => 'json',
+        'options'          => 'json',
+        'headers'          => 'json',
+        'success_response' => 'json',
     ];
 
     protected $fillable = [
@@ -22,6 +23,7 @@ class SmsTemplate extends Model
         'request_option',
         'options',
         'headers',
+        'success_response',
         'status',
         'source',
         'source_url',
