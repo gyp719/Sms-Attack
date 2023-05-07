@@ -2,6 +2,7 @@
 
 namespace App\Handlers;
 
+use App\Models\ProxyIp;
 use App\Models\SmsLog;
 use App\Models\SmsTemplate;
 use Illuminate\Support\Facades\Http;
@@ -34,8 +35,21 @@ class SmsHandler
         if ($smsTemplate['headers']) {
             $request_params['headers'] = $smsTemplate['headers'];
         }
+        // 代理IP, 转化为数组
+        $proxyIps = explode("\r\n", ProxyIp::query()->value('ips'));
+        // 随机取出一个代理IP
+        $proxy_ip = $proxyIps[array_rand($proxyIps)];
+        // 额外参数
+        $withOptions = [
+            'verify' => false,
+            'proxy' => $proxy_ip,
+        ];
+        // 当IP，不存在， 删除代理
+        if (!$proxy_ip) {
+            unset($withOptions['proxy']);
+        }
         // HTTP 客户端请求
-        $response = Http::withOptions(['verify' => false])->send($smsTemplate['method'], str_replace(config('app.mapping_phone'), $phone, $smsTemplate['url']), $request_params);
+        $response = Http::withOptions($withOptions)->send($smsTemplate['method'], str_replace(config('app.mapping_phone'), $phone, $smsTemplate['url']), $request_params);
 
         if ($response->successful() || $response->json()) {
             $smsLog = new SmsLog([
