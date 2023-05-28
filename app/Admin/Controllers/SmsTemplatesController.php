@@ -69,8 +69,8 @@ class SmsTemplatesController extends AdminController
             $form->text('url')->prepend('<i class="fa fa-internet-explorer fa-fw"></i>')->required();
             $form->radio('method')->options(SmsTemplate::$methodMap)->default(SmsTemplate::METHOD_POST)->required();
             $form->radio('request_option')->options(SmsTemplate::$requestOptionMap)->default(SmsTemplate::REQUEST_OPTION_MULTIPART)->required();
-            $form->keyValue('options')->default(['' => config('app.mapping_phone')])->required();
             $form->keyValue('headers');
+            $form->keyValue('options')->default(['' => config('app.mapping_phone')])->required();
             $form->textarea('success_response')->rows(10)->help("<a href='https://www.sojson.com' target='_blank'>在线Json格式化</a>");
             $form->radio('status')->options(SmsTemplate::$statusMap)->default(SmsTemplate::STATUS_ON)->required();
             $form->radio('source')->options(SmsTemplate::$sourceMap)

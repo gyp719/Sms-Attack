@@ -6,7 +6,6 @@ use App\Models\ProxyIp;
 use App\Models\SmsLog;
 use App\Models\SmsTemplate;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Log;
 
 class SmsHandler
@@ -84,6 +83,7 @@ class SmsHandler
 
                     (isset($response['success']) && $response['success'] == $success_response_array['success'] && isset($response['request_id']) && is_numeric($response['request_id'])) ||
                     (isset($response['success']) && $response['success'] == $success_response_array['success'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
+                    (isset($response['success']) && $response['success'] == $success_response_array['success'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
 
                     (isset($response['err']) && $response['err'] == $success_response_array['err'] && isset($response['msg']) && $response['msg'] == $success_response_array['msg']) ||
                     (isset($response['isSuccess']) && $response['isSuccess'] == $success_response_array['isSuccess'] && isset($response['message']) && $response['message'] == $success_response_array['message']) ||
